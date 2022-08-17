@@ -1,7 +1,7 @@
 package checklist.com.server.BestCheckListEver.services;
 import java.util.List;
 
-public interface Service<T>{
+public interface Service<T> {
 
 	T getById(Integer id);
 	

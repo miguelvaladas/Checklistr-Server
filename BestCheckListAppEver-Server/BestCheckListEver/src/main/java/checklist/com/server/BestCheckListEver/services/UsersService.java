@@ -1,9 +1,13 @@
 package checklist.com.server.BestCheckListEver.services;
 import checklist.com.server.BestCheckListEver.models.*;
 import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import checklist.com.server.BestCheckListEver.daos.UserDao;
 
-public class UsersService implements Service<User> {
+@Service
+public class UsersService implements checklist.com.server.BestCheckListEver.services.Service<User> {
 
 	private UserDao userDao;
 

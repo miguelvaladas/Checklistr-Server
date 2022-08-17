@@ -19,6 +19,16 @@ public class Activity{
 	@ManyToOne
 	private User user;
 
+	private String description;
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
 	private void setId(Integer id){
 		this.id = id;
 	}

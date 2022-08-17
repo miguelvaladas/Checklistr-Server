@@ -1,7 +1,7 @@
 package checklist.com.server.BestCheckListEver.models;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +20,7 @@ public class User {
 	private Integer id;
 
 	@OneToMany(mappedBy= "user")
-	private ArrayList<Activity> activitiesList;
+	private List<Activity> activitiesList;
 
 	public void setId(Integer id){
 		this.id = id;
@@ -38,11 +38,11 @@ public class User {
 		return this.name;
 	}
 	
-	public ArrayList<Activity> getActivitiesList(){
+	public List<Activity> getActivitiesList(){
 		return this.activitiesList;
 	}
 
-	public void setActivitiesList(ArrayList<Activity> list){
+	public void setActivitiesList(List<Activity> list){
 		this.activitiesList = list; 
 	}
 }

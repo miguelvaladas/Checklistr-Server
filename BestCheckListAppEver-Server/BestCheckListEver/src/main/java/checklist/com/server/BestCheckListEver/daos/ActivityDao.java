@@ -15,6 +15,13 @@ public class ActivityDao implements Dao<Activity> {
 	private EntityManager entityManager;
 
 
+	public List<Activity> getAllUserActivities(Integer userId){
+
+		TypedQuery<Activity> query = entityManager.createQuery("SELECT activity from Activity activity WHERE activity.user_id = :user_id", Activity.class);
+		query.setParameter("user_id", userId);
+		return query.getResultList();
+	}
+
 	public Activity getById(Integer id){
 		return entityManager.find(Activity.class,id);
 	}
