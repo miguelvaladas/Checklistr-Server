@@ -3,8 +3,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
 import java.util.List;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
-
+import checklist.com.server.BestCheckListEver.models.*;
 public class UserDao implements Dao<User> {
 	
 	private EntityManager entityManager;
