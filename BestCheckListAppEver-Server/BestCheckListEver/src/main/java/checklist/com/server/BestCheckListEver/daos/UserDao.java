@@ -1,19 +1,30 @@
 package checklist.com.server.BestCheckListEver.daos;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import checklist.com.server.BestCheckListEver.models.*;
+
+@Repository
+@Transactional
 public class UserDao implements Dao<User> {
-	
+
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	public User getById(Integer id){
 		return entityManager.find(User.class,id);
 	}
-
+	
+	@Transactional
 	public List<User> getAll(){
-		TypedQuery<User> query = entityManager.createQuery("SELECT t from users t", User.class);
+		TypedQuery<User> query = entityManager.createQuery("SELECT t from User t", User.class);
 
 		List<User> list = query.getResultList();
 		return list;
@@ -55,6 +66,7 @@ public class UserDao implements Dao<User> {
 		}
 	}
 
+	@Autowired
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}

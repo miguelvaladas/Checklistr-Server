@@ -11,6 +11,7 @@ import java.util.List;
 import checklist.com.server.BestCheckListEver.models.*;
 import checklist.com.server.BestCheckListEver.services.ActivitiesService;
 
+@RequestMapping(path = "/app")
 @CrossOrigin ( origins = "*", maxAge = 3600 )
 @RestController
 public class RestActivitiesController {

@@ -2,6 +2,7 @@ package checklist.com.server.BestCheckListEver.services;
 import checklist.com.server.BestCheckListEver.models.*;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import checklist.com.server.BestCheckListEver.daos.*;
@@ -36,6 +37,7 @@ public class ActivitiesService implements checklist.com.server.BestCheckListEver
 		activityDao.delete(activity);
 	}
 
+	@Autowired
 	public void setActivityDao(ActivityDao activityDao) {
 		this.activityDao = activityDao;
 	}

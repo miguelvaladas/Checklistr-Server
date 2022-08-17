@@ -3,6 +3,7 @@ package checklist.com.server.BestCheckListEver.models;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	@OneToMany(mappedBy= "user")
+	@OneToMany(mappedBy= "user", fetch = FetchType.EAGER)
 	private List<Activity> activitiesList;
 
 	public void setId(Integer id){
