@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Entity
 @Table ( name = "activities" )
 public class Activity{
@@ -29,19 +31,20 @@ public class Activity{
 		return description;
 	}
 
-	private void setId(Integer id){
+	public void setId(Integer id){
 		this.id = id;
 	}
 
-	private Integer getId(){
+	public Integer getId(){
 		return this.id;
 	}
-
-	private void setUser(User user){
+	
+	@Autowired
+	public void setUser(User user){
 		this.user = user;
 	}
 
-	private User getUser(){
+	public User getUser(){
 		return this.user;
 	}
 
