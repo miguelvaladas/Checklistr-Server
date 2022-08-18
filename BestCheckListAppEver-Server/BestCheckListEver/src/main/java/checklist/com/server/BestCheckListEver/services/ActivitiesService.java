@@ -13,9 +13,9 @@ public class ActivitiesService implements checklist.com.server.BestCheckListEver
 
 	private ActivityDao activityDao;
 
-	// public List<Activity> getAllActivitiesFromUser(Integer userId){
-		
-	// }
+	public List<Activity> getAllActivitiesFromUser(Integer userId){
+		return activityDao.getAllUserActivities(userId);
+	}
 
 	public Activity getById(Integer id){
 		return activityDao.getById(id);

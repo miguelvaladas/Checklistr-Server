@@ -30,6 +30,14 @@ public class RestActivitiesController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
+	@RequestMapping(method = RequestMethod.GET, path = "/{id}/activities")
+	public ResponseEntity<List<Activity>> getActivitiesFromUser(@PathVariable Integer id){
+
+		List<Activity> list = activitiesService.getAllActivitiesFromUser(id);
+
+		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
 	@RequestMapping(method = RequestMethod.POST, path ="/activities/add/desc={description}/user={userId}")
 	public ResponseEntity<HttpStatus> addActivity(@PathVariable String description, @PathVariable Integer userId){
 		User user = usersService.getById(userId); 
@@ -42,6 +50,16 @@ public class RestActivitiesController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	@RequestMapping(method = RequestMethod.PUT, path="/activities/update/id={activityId}&des={description}&user={userId}")
+	public ResponseEntity<HttpStatus> updateActivity(@PathVariable Integer activityId, @PathVariable String description, @PathVariable Integer userId){
+		
+		Activity activity = activitiesService.getById(activityId);
+		activity.setDescription(description);
+		activitiesService.update(activity);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	@Autowired
 	public void setActivitiesService(ActivitiesService activitiesService) {
 		this.activitiesService = activitiesService;
@@ -50,7 +68,8 @@ public class RestActivitiesController {
 	public ActivitiesService getActivitiesService() {
 		return activitiesService;
 	}
-	
+
+	@Autowired
 	public void setUsersService(UsersService usersService) {
 		this.usersService = usersService;
 	}
