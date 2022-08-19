@@ -15,6 +15,7 @@ import checklist.com.server.BestCheckListEver.services.UsersService;
 
 @CrossOrigin ( origins = "*", maxAge = 3600 )
 @RestController
+@RequestMapping(method = RequestMethod.GET, path = "/checklist")
 public class RestActivitiesController {
 
 	private ActivitiesService activitiesService;
