@@ -24,6 +24,11 @@ public class UsersService implements checklist.com.server.BestCheckListEver.serv
 		userDao.update(user);
 	}
 
+	public Integer loginUser(String name, String pw){
+		User user = userDao.getUserByNameAndPw(name, pw);
+		return user.getId();		
+	}
+
 	public void update(Integer userId, String name, String pw){
 		User user = new User();
 		user.setId(userId);

@@ -21,8 +21,14 @@ public class UserDao implements Dao<User> {
 	public User getById(Integer id){
 		return entityManager.find(User.class,id);
 	}
-	
-	@Transactional
+
+	public User getUserByNameAndPw(String name, String pw){
+		TypedQuery<User> query = entityManager.createQuery("SELECT t from User t WHERE t.name = :name AND t.password = :pw", User.class);
+		query.setParameter("name", name);
+		query.setParameter("pw", pw);
+	return query.getSingleResult();
+}
+
 	public List<User> getAll(){
 		TypedQuery<User> query = entityManager.createQuery("SELECT t from User t", User.class);
 
