@@ -39,7 +39,7 @@ public class ActivitiesService implements checklist.com.server.BestCheckListEver
 	}
 
 	public void addActivity(Integer userId, String description){
-		User user = usersService.getById(userId);
+		AppUser user = usersService.getById(userId);
 		Activity activity = new Activity();
 		activity.setUser(user);
 		activity.setDescription(description);

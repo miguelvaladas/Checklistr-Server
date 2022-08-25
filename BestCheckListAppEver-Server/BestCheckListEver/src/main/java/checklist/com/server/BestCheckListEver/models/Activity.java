@@ -5,8 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Activity{
 
 	@Id
-	@GeneratedValue ( strategy = GenerationType.AUTO )
+	@GeneratedValue ( strategy = GenerationType.IDENTITY )
 	private Integer id;
-
+	
+	@JsonBackReference
 	@ManyToOne
-	private User user;
+	private AppUser user;
 
 	private String description;
 
@@ -40,11 +42,11 @@ public class Activity{
 	}
 	
 	@Autowired
-	public void setUser(User user){
+	public void setUser(AppUser user){
 		this.user = user;
 	}
 
-	public User getUser(){
+	public AppUser getUser(){
 		return this.user;
 	}
 

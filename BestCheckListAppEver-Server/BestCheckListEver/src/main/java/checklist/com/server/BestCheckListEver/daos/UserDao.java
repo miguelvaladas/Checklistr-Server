@@ -13,63 +13,47 @@ import checklist.com.server.BestCheckListEver.models.*;
 
 @Repository
 @Transactional
-public class UserDao implements Dao<User> {
+public class UserDao implements Dao<AppUser> {
 
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public User getById(Integer id){
-		return entityManager.find(User.class,id);
+	public AppUser getById(Integer id){
+		return entityManager.find(AppUser.class,id);
 	}
 
-	public User getUserByNameAndPw(String name, String pw){
-		TypedQuery<User> query = entityManager.createQuery("SELECT t from User t WHERE t.name = :name AND t.password = :pw", User.class);
+	public AppUser getUserByNameAndPw(String name, String pw){
+		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t WHERE t.name = :name AND t.password = :pw", AppUser.class);
 		query.setParameter("name", name);
 		query.setParameter("pw", pw);
 	return query.getSingleResult();
 }
 
-	public List<User> getAll(){
-		TypedQuery<User> query = entityManager.createQuery("SELECT t from User t", User.class);
+	public AppUser getUserByName(String name){
+		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t WHERE t.name = :name", AppUser.class);
+		query.setParameter("name", name);
+		return query.getSingleResult();
+	}
 
-		List<User> list = query.getResultList();
+	public List<AppUser> getAll(){
+		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t", AppUser.class);
+		List<AppUser> list = query.getResultList();
 		return list;
 	}
-
-	public void save(User user){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
+	
+	@Transactional
+	public void save(AppUser user){
 			entityManager.persist(user);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
-
-	public void update(User user){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
+	
+	@Transactional
+	public void update(AppUser user){
 			entityManager.merge(user);
-			tx.commit();
-		} catch (Exception e) {
-		tx.rollback();
-		}
 	}
 
-	public void delete(User user){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
+	@Transactional
+	public void delete(AppUser user){
 			entityManager.remove(user);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
 
 	@Autowired

@@ -7,7 +7,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Transient;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import javax.persistence.Query;
@@ -15,6 +17,7 @@ import javax.persistence.TypedQuery;
 
 import checklist.com.server.BestCheckListEver.models.Activity;
 
+@Transactional
 @Repository
 public class ActivityDao implements Dao<Activity> {
 
@@ -42,40 +45,15 @@ public class ActivityDao implements Dao<Activity> {
 	}
 
 	public void save(Activity activity){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
 			entityManager.persist(activity);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
 
 	public void update(Activity activity){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
 			entityManager.merge(activity);
-			tx.commit();
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
 
 	public void delete(Activity activity){
-		EntityTransaction tx = entityManager.getTransaction();
-
-		try {
-			tx.begin();
 			entityManager.remove(activity);
-			tx.commit();
-			
-		} catch (Exception e) {
-			tx.rollback();
-		}
 	}
 
 	public EntityManager getEntityManager() {

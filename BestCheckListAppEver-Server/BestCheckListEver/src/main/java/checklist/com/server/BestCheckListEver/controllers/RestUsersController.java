@@ -1,9 +1,7 @@
 package checklist.com.server.BestCheckListEver.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParseException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,37 +16,31 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import checklist.com.server.BestCheckListEver.models.*;
 import org.springframework.http.HttpStatus;
-
 import checklist.com.server.BestCheckListEver.services.ActivitiesService;
 import checklist.com.server.BestCheckListEver.services.UsersService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping (method = RequestMethod.GET, path = "/checklist")
+@RequestMapping (method = RequestMethod.GET, path = "/api")
 public class RestUsersController {
 
 	private UsersService usersService;	
 	private ActivitiesService activitiesService;
 
-	@RequestMapping(method = RequestMethod.GET, path = "/users")
+	@RequestMapping(method = RequestMethod.GET, path = "/admin/users")
 	@ResponseBody
-	public ResponseEntity<List<User>> showAllUsers(){
-		List<User> list = usersService.getAll();
-		System.out.println("LIST:" + list);
-		return new ResponseEntity<>(list,HttpStatus.OK);
+	public ResponseEntity<List<AppUser>> showAllUsers(){
+		List<AppUser> list = usersService.getAll();
+		return ResponseEntity.ok().body(list);
 	}
 
 	@Transactional
-	@RequestMapping(method = RequestMethod.POST, path = "/login")
+	@RequestMapping(method = RequestMethod.POST, path = "users/login")
 	public ResponseEntity<Integer> loginUser(@RequestBody String response) throws JsonMappingException, JsonProcessingException {
-
-
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, String> map = objectMapper.readValue(response, HashMap.class);
-		// ver o JWT token para retornar um token a sério. Permite aceder às propriedades gravadas do user através do JWT. Seguro o suff. https://jwt.io/
 		System.out.println(map);
 		System.out.println("username: " + map.get("username"));
 		System.out.println("password: " + map.get("password"));
@@ -58,23 +49,31 @@ public class RestUsersController {
 	}
 
 	@Transactional
-	@RequestMapping(method = RequestMethod.POST, path = "/users/add/name={name}&pw={pw}")
-	public ResponseEntity<HttpStatus> addUser(@PathVariable String name, @PathVariable String pw){
-		usersService.add(name, pw);
+	@RequestMapping(method = RequestMethod.POST, path = "/users")
+	public ResponseEntity<HttpStatus> addUser(@RequestBody String response) throws JsonMappingException, JsonProcessingException{
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, String> map = objectMapper.readValue(response, Map.class);
+		System.out.println("Username: " + map.get("username"));
+
+		usersService.add(map.get("username"), map.get("password"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Transactional
-	@RequestMapping(method = RequestMethod.DELETE, path = "/users/delete/id={id}")
-	public ResponseEntity<HttpStatus> deleteUser(@PathVariable Integer id){
-		usersService.remove(id);
+	@RequestMapping(method = RequestMethod.DELETE, path = "/users")
+	public ResponseEntity<HttpStatus> deleteUser(@RequestBody String response) throws JsonProcessingException, JsonMappingException{	
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Integer> map = objectMapper.readValue(response, Map.class);
+		usersService.remove(map.get("id"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Transactional
-	@RequestMapping(method = RequestMethod.PUT, path = "/users/update/id={id}&name={name}&pw={pw}")
-	public ResponseEntity<HttpStatus> updateUser(@PathVariable Integer userId, @PathVariable String name, @PathVariable String pw){
-		usersService.update(userId, name, pw);
+	@RequestMapping(method = RequestMethod.PUT, path = "/users")
+	public ResponseEntity<HttpStatus> updateUser(@RequestBody String response) throws JsonMappingException, JsonProcessingException{
+		ObjectMapper objectMapper = new ObjectMapper();
+		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);	
+		usersService.update((Integer) map.get("id"), (String) map.get("username"), (String) map.get("password"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

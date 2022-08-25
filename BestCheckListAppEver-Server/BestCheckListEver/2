@@ -24,9 +24,13 @@ public class UsersService implements checklist.com.server.BestCheckListEver.serv
 		if(user == null){
 			throw new UsernameNotFoundException("User not found in database.");
 		}
+
+		// Tenho que criar um ENUM com roles para permitir que os users tenham roles diferentes e passar isso como authorities para o construtor do Users.
+		//
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
-		return new org.springframework.security.core.userdetails.User(user.getName(),user.getPassword(), authorities);
+		authorities.add(new SimpleGrantedAuthority(user.getRole());
+		SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
+		return new org.springframework.security.core.userdetails.User(user.getName(),user.getPassword(), authority);
 	}
 
 	public AppUser getById(Integer id){
