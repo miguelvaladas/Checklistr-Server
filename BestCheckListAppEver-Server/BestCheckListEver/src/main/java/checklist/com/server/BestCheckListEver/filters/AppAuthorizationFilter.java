@@ -32,7 +32,7 @@ public class AppAuthorizationFilter extends OncePerRequestFilter{
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException,IOException {
-		if(request.getServletPath().equals("/login")){
+		if(request.getServletPath().contains("/login")){
 			filterChain.doFilter(request, response);
 
 		} else {
