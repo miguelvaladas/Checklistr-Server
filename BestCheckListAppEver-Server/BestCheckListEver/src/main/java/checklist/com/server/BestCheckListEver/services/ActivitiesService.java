@@ -1,4 +1,5 @@
 package checklist.com.server.BestCheckListEver.services;
+
 import checklist.com.server.BestCheckListEver.models.*;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,50 +8,54 @@ import checklist.com.server.BestCheckListEver.daos.*;
 import checklist.com.server.BestCheckListEver.models.Activity;
 
 @Service
-public class ActivitiesService implements checklist.com.server.BestCheckListEver.services.Service <Activity> {
+public class ActivitiesService implements checklist.com.server.BestCheckListEver.services.Service<Activity> {
 
 	private ActivityDao activityDao;
 	private UsersService usersService;
 
-	public List<Activity> getAllActivitiesFromUser(Integer userId){
-		return activityDao.getAllUserActivities(userId);
+	public List<Activity> getAllActivitiesFromUser(String username) {
+		return activityDao.getAllUserActivities(username);
 	}
 
-	public Activity getById(Integer id){
+	public Activity getById(Integer id) {
 		return activityDao.getById(id);
 	}
 
-	public List<Activity> getAll(){
+	public List<Activity> getAll() {
 		return activityDao.getAll();
 	}
 
-	public void update(Activity activity){
+	public Activity getActivityByDescription(String description) {
+		return activityDao.getActivityByDescription(description);
+	}
+
+	public void update(Activity activity) {
 		activityDao.update(activity);
 	}
 
-	public void updateActivity(Integer activityId, String description){
+	public void updateActivity(Integer activityId, String description) {
 		Activity activity = activityDao.getById(activityId);
 		activity.setDescription(description);
 		activityDao.update(activity);
 	}
 
-	public void add(Activity activity){
+	public void add(Activity activity) {
 		activityDao.save(activity);
 	}
 
-	public void addActivity(Integer userId, String description){
-		AppUser user = usersService.getById(userId);
+	public void addActivity(String username, String description) {
+		AppUser user = usersService.getByName(username);
 		Activity activity = new Activity();
 		activity.setUser(user);
 		activity.setDescription(description);
 		activityDao.save(activity);
 	}
 
-	public void remove(Activity activity){
+	public void remove(Activity activity) {
 		activityDao.delete(activity);
 	}
 
-	public void remove(Integer activityId){
+	public void remove(Integer activityId) {
 		Activity activity = activityDao.getById(activityId);
 		activityDao.delete(activity);
 	}

@@ -21,7 +21,8 @@ import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.util.pattern.PathPatternParser;
 import java.util.Arrays;
 
-@Configuration @EnableWebSecurity
+@Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private UserDetailsService userDetailsService;
@@ -34,30 +35,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// http.formLogin();
 		http.csrf().disable();
 		http.cors();
 		http.formLogin();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		// http.authorizeRequests().anyRequest().permitAll();
 		http.addFilter(new AppAuthenticationFilter(authenticationManagerBean()));
-		// http.addFilterBefore(new AppAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		// http.addFilterBefore(new AppAuthorizationFilter(),
+		// UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource(){
+	public CorsConfigurationSource corsConfigurationSource() {
 		final CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("Head", "GET", "POST", "PUT", "DELETE", "PATCH"));
 
 		// configuration.setAllowCredentials(true);
-		
+
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-
 
 	@Bean
 	@Override
@@ -69,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void setUserDetailsService(UserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
-	
+
 	@Autowired
 	public void setbCryptPasswordEncoder(BCryptPasswordEncoder bCryptPasswordEncoder) {
 		this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -83,4 +82,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return bCryptPasswordEncoder;
 	}
 }
-
