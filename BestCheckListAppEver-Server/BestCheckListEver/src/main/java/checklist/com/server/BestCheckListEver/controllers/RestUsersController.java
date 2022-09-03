@@ -18,21 +18,20 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import checklist.com.server.BestCheckListEver.models.*;
 import org.springframework.http.HttpStatus;
-import checklist.com.server.BestCheckListEver.services.ActivitiesService;
-import checklist.com.server.BestCheckListEver.services.UsersService;
+import checklist.com.server.BestCheckListEver.services.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(method = RequestMethod.GET, path = "/api")
 public class RestUsersController {
 
-	private UsersService usersService;
-	private ActivitiesService activitiesService;
+	private UserService userService;
+	private ActivityService activityService;
 
 	@RequestMapping(method = RequestMethod.GET, path = "/admin/users")
 	@ResponseBody
 	public ResponseEntity<List<AppUser>> showAllUsers() {
-		List<AppUser> list = usersService.getAll();
+		List<AppUser> list = userService.getAll();
 		return ResponseEntity.ok().body(list);
 	}
 
@@ -44,7 +43,7 @@ public class RestUsersController {
 		Map<String, String> map = objectMapper.readValue(response, Map.class);
 		System.out.println("Username: " + map.get("username"));
 
-		usersService.add(map.get("username"), map.get("password"));
+		userService.add(map.get("username"), map.get("password"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -54,7 +53,7 @@ public class RestUsersController {
 			throws JsonProcessingException, JsonMappingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, Integer> map = objectMapper.readValue(response, Map.class);
-		usersService.remove(map.get("id"));
+		userService.remove(map.get("id"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -64,25 +63,25 @@ public class RestUsersController {
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
-		usersService.update((Integer) map.get("id"), (String) map.get("username"), (String) map.get("password"));
+		userService.update((Integer) map.get("id"), (String) map.get("username"), (String) map.get("password"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Autowired
-	public void setActivitiesService(ActivitiesService activitiesService) {
-		this.activitiesService = activitiesService;
+	public void setActivityService(ActivityServiceImpl activityService) {
+		this.activityService = activityService;
 	}
 
-	public ActivitiesService getActivitiesService() {
-		return activitiesService;
+	public ActivityService getActivityService() {
+		return activityService;
 	}
 
 	@Autowired
-	public void setUsersService(UsersService usersService) {
-		this.usersService = usersService;
+	public void setUserService(UserServiceImpl userService) {
+		this.userService = userService;
 	}
 
-	public UsersService getUsersService() {
-		return usersService;
+	public UserService getUserService() {
+		return userService;
 	}
 }

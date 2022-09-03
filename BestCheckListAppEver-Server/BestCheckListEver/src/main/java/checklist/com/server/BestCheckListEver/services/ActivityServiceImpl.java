@@ -8,10 +8,10 @@ import checklist.com.server.BestCheckListEver.daos.*;
 import checklist.com.server.BestCheckListEver.models.Activity;
 
 @Service
-public class ActivitiesService implements checklist.com.server.BestCheckListEver.services.Service<Activity> {
+public class ActivityServiceImpl implements ActivityService {
 
 	private ActivityDao activityDao;
-	private UsersService usersService;
+	private UserService userService;
 
 	public List<Activity> getAllActivitiesFromUser(String username) {
 		return activityDao.getAllUserActivities(username);
@@ -25,34 +25,18 @@ public class ActivitiesService implements checklist.com.server.BestCheckListEver
 		return activityDao.getAll();
 	}
 
-	public Activity getActivityByDescription(String description) {
-		return activityDao.getActivityByDescription(description);
-	}
-
-	public void update(Activity activity) {
-		activityDao.update(activity);
-	}
-
 	public void updateActivity(Integer activityId, String description) {
 		Activity activity = activityDao.getById(activityId);
 		activity.setDescription(description);
 		activityDao.update(activity);
 	}
 
-	public void add(Activity activity) {
-		activityDao.save(activity);
-	}
-
-	public void addActivity(String username, String description) {
-		AppUser user = usersService.getByName(username);
+	public Activity addActivity(String username, String description) {
+		AppUser user = userService.getByName(username);
 		Activity activity = new Activity();
 		activity.setUser(user);
 		activity.setDescription(description);
-		activityDao.save(activity);
-	}
-
-	public void remove(Activity activity) {
-		activityDao.delete(activity);
+		return activityDao.save(activity);
 	}
 
 	public void remove(Integer activityId) {
@@ -61,16 +45,16 @@ public class ActivitiesService implements checklist.com.server.BestCheckListEver
 	}
 
 	@Autowired
-	public void setUsersService(UsersService usersService) {
-		this.usersService = usersService;
+	public void setUsersService(UserServiceImpl userService) {
+		this.userService = userService;
 	}
 
-	public UsersService getUsersService() {
-		return usersService;
+	public UserService getUsersService() {
+		return userService;
 	}
 
 	@Autowired
-	public void setActivityDao(ActivityDao activityDao) {
+	public void setActivityDao(ActivityDaoImpl activityDao) {
 		this.activityDao = activityDao;
 	}
 

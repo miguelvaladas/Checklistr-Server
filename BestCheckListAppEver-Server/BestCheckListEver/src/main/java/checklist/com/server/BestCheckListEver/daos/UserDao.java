@@ -1,68 +1,21 @@
 package checklist.com.server.BestCheckListEver.daos;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import checklist.com.server.BestCheckListEver.models.*;
 
-@Repository
-@Transactional
-public class UserDao implements Dao<AppUser> {
+import checklist.com.server.BestCheckListEver.models.AppUser;
 
-	@PersistenceContext
-	private EntityManager entityManager;
+public interface UserDao {
 
-	public AppUser getById(Integer id){
-		return entityManager.find(AppUser.class,id);
-	}
+	AppUser getById(Integer id);
 
-	public AppUser getUserByNameAndPw(String name, String pw){
-		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t WHERE t.name = :name AND t.password = :pw", AppUser.class);
-		query.setParameter("name", name);
-		query.setParameter("pw", pw);
-	return query.getSingleResult();
-}
+	AppUser getUserByName(String name);
 
-	public AppUser getUserByName(String name){
-		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t WHERE t.name = :name", AppUser.class);
-		query.setParameter("name", name);
-		return query.getSingleResult();
-	}
+	List<AppUser> getAll();
 
-	public List<AppUser> getAll(){
-		TypedQuery<AppUser> query = entityManager.createQuery("SELECT t from AppUser t", AppUser.class);
-		List<AppUser> list = query.getResultList();
-		return list;
-	}
-	
-	@Transactional
-	public void save(AppUser user){
-			entityManager.persist(user);
-	}
-	
-	@Transactional
-	public void update(AppUser user){
-			entityManager.merge(user);
-	}
+	AppUser save(AppUser user);
 
-	@Transactional
-	public void delete(AppUser user){
-			entityManager.remove(user);
-	}
+	void update(AppUser user);
 
-	@Autowired
-	public void setEntityManager(EntityManager entityManager) {
-		this.entityManager = entityManager;
-	}
-
-	public EntityManager getEntityManager() {
-		return entityManager;
-	}
+	void delete(AppUser user);
 
 }

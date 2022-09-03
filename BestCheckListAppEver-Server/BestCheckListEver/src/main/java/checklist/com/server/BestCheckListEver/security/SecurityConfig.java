@@ -1,8 +1,6 @@
 package checklist.com.server.BestCheckListEver.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,8 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilter(new AppAuthenticationFilter(authenticationManagerBean()));
-		// http.addFilterBefore(new AppAuthorizationFilter(),
-		// UsernamePasswordAuthenticationFilter.class);
+
+		http.addFilterBefore(new AppAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 	@Bean

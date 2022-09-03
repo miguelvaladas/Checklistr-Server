@@ -9,13 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import checklist.com.server.BestCheckListEver.daos.UserDao;
 import java.util.ArrayList;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import checklist.com.server.BestCheckListEver.daos.*;
 
 @Service
-public class UsersService
-		implements checklist.com.server.BestCheckListEver.services.Service<AppUser>, UserDetailsService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 	private UserDao userDao;
 	private PasswordEncoder passwordEncoder;
@@ -43,24 +42,11 @@ public class UsersService
 		return userDao.getAll();
 	}
 
-	public void update(AppUser user) {
-		userDao.update(user);
-	}
-
-	public Integer loginUser(String name, String pw) {
-		AppUser user = userDao.getUserByNameAndPw(name, passwordEncoder.encode(pw));
-		return user.getId();
-	}
-
 	public void update(Integer userId, String name, String pw) {
 		AppUser user = new AppUser();
 		user.setId(userId);
 		user.setName(name);
 		user.setPassword(passwordEncoder.encode(pw));
-		userDao.save(user);
-	}
-
-	public void add(AppUser user) {
 		userDao.save(user);
 	}
 
@@ -73,17 +59,13 @@ public class UsersService
 		userDao.save(user);
 	}
 
-	public void remove(AppUser user) {
-		userDao.delete(user);
-	}
-
 	public void remove(Integer userId) {
 		AppUser user = userDao.getById(userId);
 		userDao.delete(user);
 	}
 
 	@Autowired
-	public void setUserDao(UserDao userDao) {
+	public void setUserDao(UserDaoImpl userDao) {
 		this.userDao = userDao;
 	}
 

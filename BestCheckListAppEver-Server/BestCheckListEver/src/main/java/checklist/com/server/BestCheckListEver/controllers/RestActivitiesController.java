@@ -18,44 +18,36 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import checklist.com.server.BestCheckListEver.models.*;
-import checklist.com.server.BestCheckListEver.services.ActivitiesService;
-import checklist.com.server.BestCheckListEver.services.UsersService;
+import checklist.com.server.BestCheckListEver.services.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(method = RequestMethod.GET, path = "/api")
 public class RestActivitiesController {
 
-	private ActivitiesService activitiesService;
-	private UsersService usersService;
+	private ActivityService activityService;
+	private UserService userService;
 
 	@RequestMapping(method = RequestMethod.GET, path = "/admin/activities")
 	public ResponseEntity<List<Activity>> showAllActivities() {
-		List<Activity> list = activitiesService.getAll();
+		List<Activity> list = activityService.getAll();
 		return new ResponseEntity<>(list, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/activities/username={username}")
 	public ResponseEntity<List<Activity>> getActivitiesFromUser(@PathVariable String username) {
-		List<Activity> list = activitiesService.getAllActivitiesFromUser(username);
+		List<Activity> list = activityService.getAllActivitiesFromUser(username);
 		return new ResponseEntity<>(list, HttpStatus.OK);
-	}
-
-	@RequestMapping(method = RequestMethod.GET, path = "/activities/{description}")
-	public ResponseEntity<Activity> getActivityByDescription(@PathVariable String description) {
-		Activity activity = activitiesService.getActivityByDescription(description);
-		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.POST, path = "/activities")
-	public ResponseEntity<HttpStatus> addActivity(@RequestBody String response)
+	public ResponseEntity<Activity> addActivity(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		System.out.println(response);
 		HashMap<String, String> map = objectMapper.readValue(response, HashMap.class);
-		activitiesService.addActivity(map.get("username"), map.get("description"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		Activity activity = activityService.addActivity(map.get("username"), map.get("description"));
+		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
 	@Transactional
@@ -64,7 +56,7 @@ public class RestActivitiesController {
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
-		activitiesService.updateActivity((Integer) map.get("id"), (String) map.get("description"));
+		activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -74,25 +66,25 @@ public class RestActivitiesController {
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, Integer> map = objectMapper.readValue(response, HashMap.class);
-		activitiesService.remove(map.get("id"));
+		activityService.remove(map.get("id"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Autowired
-	public void setActivitiesService(ActivitiesService activitiesService) {
-		this.activitiesService = activitiesService;
+	public void setActivityService(ActivityServiceImpl activityService) {
+		this.activityService = activityService;
 	}
 
-	public ActivitiesService getActivitiesService() {
-		return activitiesService;
+	public ActivityService getActivityService() {
+		return activityService;
 	}
 
 	@Autowired
-	public void setUsersService(UsersService usersService) {
-		this.usersService = usersService;
+	public void setUserService(UserServiceImpl userService) {
+		this.userService = userService;
 	}
 
-	public UsersService getUsersService() {
-		return usersService;
+	public UserService getUserService() {
+		return userService;
 	}
 }

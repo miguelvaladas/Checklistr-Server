@@ -21,24 +21,24 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class AppAuthorizationFilter extends OncePerRequestFilter{
+public class AppAuthorizationFilter extends OncePerRequestFilter {
 
-
-	private Collection<SimpleGrantedAuthority> getAuthoritiesFromToken(DecodedJWT decodedJWT){
-			Collection<SimpleGrantedAuthority> collection = new ArrayList<>();
-			collection.add(new SimpleGrantedAuthority(decodedJWT.getClaim("role").asString()));
-			return collection;
+	private Collection<SimpleGrantedAuthority> getAuthoritiesFromToken(DecodedJWT decodedJWT) {
+		Collection<SimpleGrantedAuthority> collection = new ArrayList<>();
+		collection.add(new SimpleGrantedAuthority(decodedJWT.getClaim("role").toString()));
+		return collection;
 	}
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException,IOException {
-		if(request.getServletPath().contains("/login")){
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		if (request.getServletPath().contains("/login")) {
 			filterChain.doFilter(request, response);
 
 		} else {
 			String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")){
+			if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 				try {
 					String token = authorizationHeader.substring("Bearer ".length());
 					Algorithm algorithm = Algorithm.HMAC256("mychecklistsecret".getBytes());
@@ -47,13 +47,11 @@ public class AppAuthorizationFilter extends OncePerRequestFilter{
 					DecodedJWT decodedJWT = verifier.verify(token);
 
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-						decodedJWT.getSubject(),
-						null,
-						getAuthoritiesFromToken(decodedJWT));
+							decodedJWT.getSubject(), null, getAuthoritiesFromToken(decodedJWT));
 
 					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 					filterChain.doFilter(request, response);
-		
+
 				} catch (Exception e) {
 					response.setHeader("error", e.getMessage());
 					response.setStatus(FORBIDDEN.value());
@@ -64,7 +62,6 @@ public class AppAuthorizationFilter extends OncePerRequestFilter{
 					response.setContentType(APPLICATION_JSON_VALUE);
 					new ObjectMapper().writeValue(response.getOutputStream(), error);
 				}
-
 
 			} else {
 				filterChain.doFilter(request, response);

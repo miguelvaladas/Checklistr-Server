@@ -1,18 +1,17 @@
 package checklist.com.server.BestCheckListEver.models;
 
 public enum Role {
-	USER("USER"),
-	ADMIN("ADMIN");
+	USER("USER"), ADMIN("ADMIN");
 
-	private String stringValue;	
+	private String stringValue;
 
-	Role(String stringValue){
+	Role(String stringValue) {
 		this.stringValue = stringValue;
 	}
 
 	@Override
-	public String toString(){
-		return this.stringValue;
-	} 
+	public String toString() {
+		return "ROLE_" + this.stringValue;
+	}
 
 }
