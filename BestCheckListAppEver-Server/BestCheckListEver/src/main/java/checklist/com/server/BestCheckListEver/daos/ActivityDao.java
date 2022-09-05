@@ -15,6 +15,6 @@ public interface ActivityDao {
 
 	void update(Activity Activity);
 
-	void delete(Activity Activity);
+	Activity delete(Activity Activity);
 
 }

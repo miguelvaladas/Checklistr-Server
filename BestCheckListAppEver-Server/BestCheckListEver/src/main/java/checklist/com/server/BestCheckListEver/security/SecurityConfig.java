@@ -15,8 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.*;
-import org.springframework.web.cors.reactive.CorsWebFilter;
-import org.springframework.web.util.pattern.PathPatternParser;
 import java.util.Arrays;
 import org.springframework.http.HttpMethod;
 
@@ -39,7 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.formLogin();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/login", "/api/refresh/token").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "api/admin/").hasAnyAuthority("USER_ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/users").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/admin/").hasAnyAuthority("USER_ADMIN");
 		http.authorizeRequests().anyRequest().authenticated();
 
 		http.addFilter(new AppAuthenticationFilter(authenticationManagerBean(), new TokenManagerImpl()));

@@ -42,32 +42,32 @@ public class RestActivitiesController {
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.POST, path = "/activities")
-	public ResponseEntity<Activity> addActivity(@RequestBody String response)
+	public ResponseEntity<Activity> addActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, String> map = objectMapper.readValue(response, HashMap.class);
+		HashMap<String, String> map = objectMapper.readValue(request, HashMap.class);
 		Activity activity = activityService.addActivity(map.get("username"), map.get("description"));
 		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/activities")
-	public ResponseEntity<HttpStatus> updateActivity(@RequestBody String response)
+	public ResponseEntity<HttpStatus> updateActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
+		HashMap<String, ?> map = objectMapper.readValue(request, HashMap.class);
 		activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.DELETE, path = "/activities")
-	public ResponseEntity<HttpStatus> deleteActivity(@RequestBody String response)
+	public ResponseEntity<Activity> deleteActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, Integer> map = objectMapper.readValue(response, HashMap.class);
-		activityService.remove(map.get("id"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		HashMap<String, Integer> map = objectMapper.readValue(request, HashMap.class);
+		Activity activity = activityService.remove(map.get("id"));
+		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
 	@Autowired

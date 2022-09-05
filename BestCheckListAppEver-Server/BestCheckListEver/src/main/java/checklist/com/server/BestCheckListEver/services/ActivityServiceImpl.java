@@ -39,9 +39,9 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.save(activity);
 	}
 
-	public void remove(Integer activityId) {
+	public Activity remove(Integer activityId) {
 		Activity activity = activityDao.getById(activityId);
-		activityDao.delete(activity);
+		return activityDao.delete(activity);
 	}
 
 	@Autowired

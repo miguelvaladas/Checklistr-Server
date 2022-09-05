@@ -56,8 +56,9 @@ public class ActivityDaoImpl implements ActivityDao {
 	}
 
 	@Transactional
-	public void delete(Activity activity) {
+	public Activity delete(Activity activity) {
 		entityManager.remove(activity);
+		return activity;
 	}
 
 	public EntityManager getEntityManager() {

@@ -68,7 +68,7 @@ public class TokenManagerImpl implements TokenManager {
 				userRoles.add(user.getRole());
 
 				String access_token = JWT.create().withSubject(user.getName())
-						.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+						.withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
 						.withIssuer(request.getRequestURL().toString())
 						.withClaim("role", userRoles.stream().map(Role::toString).collect(Collectors.toList()))
 						.sign(algorithm);

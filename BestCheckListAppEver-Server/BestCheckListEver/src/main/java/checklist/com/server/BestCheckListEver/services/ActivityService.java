@@ -15,6 +15,6 @@ public interface ActivityService {
 
 	Activity addActivity(String username, String description);
 
-	void remove(Integer activityId);
+	Activity remove(Integer activityId);
 
 }
