@@ -12,13 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import checklist.com.server.BestCheckListEver.security.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import checklist.com.server.BestCheckListEver.models.*;
+
 import org.springframework.http.HttpStatus;
 import checklist.com.server.BestCheckListEver.services.*;
+import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -65,6 +70,17 @@ public class RestUsersController {
 		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
 		userService.update((Integer) map.get("id"), (String) map.get("username"), (String) map.get("password"));
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/refresh/token")
+	public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		try {
+			TokenManager tokenManager = new TokenManagerImpl();
+			tokenManager.refreshAccessToken(request, response, userService);
+
+		} catch (Exception exception) {
+			throw new RuntimeException("Refresh token not found.");
+		}
 	}
 
 	@Autowired

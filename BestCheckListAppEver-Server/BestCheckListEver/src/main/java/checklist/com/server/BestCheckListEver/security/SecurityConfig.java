@@ -18,6 +18,7 @@ import org.springframework.web.cors.*;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.util.pattern.PathPatternParser;
 import java.util.Arrays;
+import org.springframework.http.HttpMethod;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors();
 		http.formLogin();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.addFilter(new AppAuthenticationFilter(authenticationManagerBean()));
+		http.authorizeRequests().antMatchers("/login", "/api/refresh/token").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "api/admin/").hasAnyAuthority("USER_ADMIN");
+		http.authorizeRequests().anyRequest().authenticated();
+
+		http.addFilter(new AppAuthenticationFilter(authenticationManagerBean(), new TokenManagerImpl()));
 
 		http.addFilterBefore(new AppAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
@@ -47,8 +52,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		final CorsConfiguration configuration = new CorsConfiguration();
 		configuration.setAllowedOrigins(Arrays.asList("*"));
 		configuration.setAllowedMethods(Arrays.asList("Head", "GET", "POST", "PUT", "DELETE", "PATCH"));
-
-		// configuration.setAllowCredentials(true);
 
 		configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
