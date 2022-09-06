@@ -11,7 +11,7 @@ public interface ActivityService {
 
 	List<Activity> getAll();
 
-	void updateActivity(Integer activityId, String description);
+	Activity updateActivity(Integer activityId, String description, String status);
 
 	Activity addActivity(String username, String description);
 

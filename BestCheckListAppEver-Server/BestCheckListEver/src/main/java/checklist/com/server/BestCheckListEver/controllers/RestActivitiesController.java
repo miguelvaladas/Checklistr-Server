@@ -52,12 +52,13 @@ public class RestActivitiesController {
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/activities")
-	public ResponseEntity<HttpStatus> updateActivity(@RequestBody String request)
+	public ResponseEntity<Activity> updateActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, ?> map = objectMapper.readValue(request, HashMap.class);
-		activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		Activity activity = activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"),
+				(String) map.get("status"));
+		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
 	@Transactional

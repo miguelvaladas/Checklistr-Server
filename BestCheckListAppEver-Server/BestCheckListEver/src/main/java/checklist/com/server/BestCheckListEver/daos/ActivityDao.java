@@ -13,7 +13,7 @@ public interface ActivityDao {
 
 	Activity save(Activity activity);
 
-	void update(Activity Activity);
+	Activity update(Activity Activity);
 
 	Activity delete(Activity Activity);
 

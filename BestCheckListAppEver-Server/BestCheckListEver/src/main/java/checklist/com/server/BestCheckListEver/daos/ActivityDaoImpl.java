@@ -51,8 +51,9 @@ public class ActivityDaoImpl implements ActivityDao {
 	}
 
 	@Transactional
-	public void update(Activity activity) {
+	public Activity update(Activity activity) {
 		entityManager.merge(activity);
+		return activity;
 	}
 
 	@Transactional

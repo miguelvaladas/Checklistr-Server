@@ -25,10 +25,23 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.getAll();
 	}
 
-	public void updateActivity(Integer activityId, String description) {
+	public Activity updateActivity(Integer activityId, String description, String status) {
 		Activity activity = activityDao.getById(activityId);
 		activity.setDescription(description);
-		activityDao.update(activity);
+		switch (status) {
+			case "DEFAULT":
+				activity.setStatus(Status.DEFAULT);
+				break;
+			case "RED":
+				activity.setStatus(Status.RED);
+				break;
+			case "GREEN":
+				activity.setStatus(Status.GREEN);
+				break;
+			case "YELLOW":
+				activity.setStatus(Status.YELLOW);
+		}
+		return activityDao.update(activity);
 	}
 
 	public Activity addActivity(String username, String description) {
