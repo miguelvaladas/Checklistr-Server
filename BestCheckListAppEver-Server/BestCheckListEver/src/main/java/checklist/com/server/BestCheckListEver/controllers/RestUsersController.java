@@ -42,34 +42,34 @@ public class RestUsersController {
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.POST, path = "/users")
-	public ResponseEntity<HttpStatus> addUser(@RequestBody String response)
+	public ResponseEntity<AppUser> addUser(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, String> map = objectMapper.readValue(response, Map.class);
 		System.out.println("Username: " + map.get("username"));
-
-		userService.add(map.get("username"), map.get("password"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		AppUser user = userService.add(map.get("username"), map.get("password"));
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.DELETE, path = "/users")
-	public ResponseEntity<HttpStatus> deleteUser(@RequestBody String response)
+	public ResponseEntity<AppUser> deleteUser(@RequestBody String response)
 			throws JsonProcessingException, JsonMappingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, Integer> map = objectMapper.readValue(response, Map.class);
-		userService.remove(map.get("id"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		AppUser user = userService.remove(map.get("id"));
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/users")
-	public ResponseEntity<HttpStatus> updateUser(@RequestBody String response)
+	public ResponseEntity<AppUser> updateUser(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
-		userService.update((Integer) map.get("id"), (String) map.get("username"), (String) map.get("password"));
-		return new ResponseEntity<>(HttpStatus.OK);
+		AppUser user = userService.update((Integer) map.get("id"), (String) map.get("username"),
+				(String) map.get("password"));
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/refresh/token")

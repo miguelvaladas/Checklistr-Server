@@ -14,8 +14,8 @@ public interface UserDao {
 
 	AppUser save(AppUser user);
 
-	void update(AppUser user);
+	AppUser update(AppUser user);
 
-	void delete(AppUser user);
+	AppUser delete(AppUser user);
 
 }

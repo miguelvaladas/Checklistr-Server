@@ -12,10 +12,10 @@ public interface UserService {
 
 	List<AppUser> getAll();
 
-	void update(Integer userId, String name, String pw);
+	AppUser update(Integer userId, String name, String pw);
 
-	void add(String name, String pw);
+	AppUser add(String name, String pw);
 
-	void remove(Integer userId);
+	AppUser remove(Integer userId);
 
 }

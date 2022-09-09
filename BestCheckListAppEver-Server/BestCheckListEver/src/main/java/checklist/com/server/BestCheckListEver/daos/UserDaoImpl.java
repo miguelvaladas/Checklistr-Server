@@ -44,13 +44,15 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Transactional
-	public void update(AppUser user) {
+	public AppUser update(AppUser user) {
 		entityManager.merge(user);
+		return user;
 	}
 
 	@Transactional
-	public void delete(AppUser user) {
+	public AppUser delete(AppUser user) {
 		entityManager.remove(user);
+		return user;
 	}
 
 	@Autowired

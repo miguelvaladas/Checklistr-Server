@@ -42,26 +42,26 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userDao.getAll();
 	}
 
-	public void update(Integer userId, String name, String pw) {
+	public AppUser update(Integer userId, String name, String pw) {
 		AppUser user = new AppUser();
 		user.setId(userId);
 		user.setName(name);
 		user.setPassword(passwordEncoder.encode(pw));
-		userDao.save(user);
+		return userDao.save(user);
 	}
 
-	public void add(String name, String pw) {
+	public AppUser add(String name, String pw) {
 		AppUser user = new AppUser();
 		user.setName(name);
 		user.setRole(Role.USER);
 		user.setPassword(passwordEncoder.encode(pw));
 		user.setActivitiesList(new ArrayList<Activity>());
-		userDao.save(user);
+		return userDao.save(user);
 	}
 
-	public void remove(Integer userId) {
+	public AppUser remove(Integer userId) {
 		AppUser user = userDao.getById(userId);
-		userDao.delete(user);
+		return userDao.delete(user);
 	}
 
 	@Autowired
