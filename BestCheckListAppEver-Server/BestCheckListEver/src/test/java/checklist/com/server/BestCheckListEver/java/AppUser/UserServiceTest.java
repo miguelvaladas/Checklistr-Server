@@ -99,7 +99,10 @@ class UserServiceTest {
 		AppUser user_1 = new AppUser();
 		// when
 		when(userDao.save(any(AppUser.class))).thenReturn(user_1);
-		AppUser user_2 = underTest.add("a", "a");
+
+		AppUser user_2 = underTest.add("asd", "a");
+
+		System.out.println("user 2: " + user_2);
 		// then
 		assertEquals(user_1, user_2);
 		verify(userDao, times(1)).save(any(AppUser.class));
@@ -108,12 +111,32 @@ class UserServiceTest {
 	@Test
 	void canUpdateUser() {
 		// given
+		AppUser user_1 = new AppUser();
+
+		// when
+		when(userDao.update(any(AppUser.class))).thenReturn(user_1);
+		AppUser user_2 = underTest.update(0, "b", "c");
+
+		// then
+		assertEquals(user_1, user_2);
+		verify(userDao, times(1)).update(any(AppUser.class));
 
 	}
 
 	@Test
 	void canRemoveUser() {
+		// given
+		AppUser user_1 = new AppUser();
 
+		// when
+		when(userDao.getById(anyInt())).thenReturn(user_1);
+		when(userDao.delete(any(AppUser.class))).thenReturn(user_1);
+		AppUser user_2 = underTest.remove(1);
+
+		// then
+		assertEquals(user_1, user_2);
+		verify(userDao, times(1)).delete(any(AppUser.class));
+		verify(userDao, times(1)).getById(anyInt());
 	}
 
 }

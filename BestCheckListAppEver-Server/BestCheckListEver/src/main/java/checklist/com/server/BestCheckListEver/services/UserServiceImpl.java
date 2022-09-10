@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import checklist.com.server.BestCheckListEver.daos.*;
+import checklist.com.server.BestCheckListEver.exceptions.*;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		AppUser user = userDao.getUserByName(username);
 		if (user == null) {
-			throw new UsernameNotFoundException("User not found in database.");
+			throw new UsernameNotFoundException("Username was not found in database.");
 		}
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		authorities.add(new SimpleGrantedAuthority(user.getRole().toString()));
@@ -31,11 +32,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	public AppUser getById(Integer id) {
-		return userDao.getById(id);
+		AppUser user = userDao.getById(id);
+		if (user == null) {
+			throw new UserNotFoundException("User could not be found in database through the provided id.");
+		}
+		return user;
 	}
 
 	public AppUser getByName(String username) {
-		return userDao.getUserByName(username);
+		AppUser user = userDao.getUserByName(username);
+		if (user == null) {
+			throw new UserNotFoundException("User could not be found in database through the provided username.");
+		}
+		return user;
 	}
 
 	public List<AppUser> getAll() {
@@ -43,11 +52,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	public AppUser update(Integer userId, String name, String pw) {
+		if (userDao.getById(userId) == null) {
+			throw new UserNotFoundException("User does not exist in our database.");
+		}
 		AppUser user = new AppUser();
 		user.setId(userId);
 		user.setName(name);
 		user.setPassword(passwordEncoder.encode(pw));
-		return userDao.save(user);
+		return userDao.update(user);
 	}
 
 	public AppUser add(String name, String pw) {
@@ -61,6 +73,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	public AppUser remove(Integer userId) {
 		AppUser user = userDao.getById(userId);
+		if (user == null) {
+			throw new UserNotFoundException("User does not exist in our database.");
+		}
 		return userDao.delete(user);
 	}
 

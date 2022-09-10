@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import checklist.com.server.BestCheckListEver.daos.*;
 import checklist.com.server.BestCheckListEver.models.Activity;
+import checklist.com.server.BestCheckListEver.exceptions.*;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -14,11 +15,18 @@ public class ActivityServiceImpl implements ActivityService {
 	private UserService userService;
 
 	public List<Activity> getAllActivitiesFromUser(String username) {
+		if (userService.getByName(username) == null) {
+			throw new UserNotFoundException("User could not be found in database.");
+		}
 		return activityDao.getAllUserActivities(username);
 	}
 
 	public Activity getById(Integer id) {
-		return activityDao.getById(id);
+		Activity activity = activityDao.getById(id);
+		if(activity == null){
+			throw new ActivityNotFoundException("Activity could not be found in database through the provided id.");
+		}
+		return activity;
 	}
 
 	public List<Activity> getAll() {
@@ -27,6 +35,9 @@ public class ActivityServiceImpl implements ActivityService {
 
 	public Activity updateActivity(Integer activityId, String description, String status) {
 		Activity activity = activityDao.getById(activityId);
+		if(activity == null){
+			throw new ActivityNotFoundException("Activity could not be found in database.");
+		}
 		activity.setDescription(description);
 		switch (status) {
 			case "DEFAULT":
@@ -54,6 +65,9 @@ public class ActivityServiceImpl implements ActivityService {
 
 	public Activity remove(Integer activityId) {
 		Activity activity = activityDao.getById(activityId);
+		if(activity == null){
+			throw new ActivityNotFoundException("Activity could not be found in database.");
+		}
 		return activityDao.delete(activity);
 	}
 
