@@ -40,8 +40,8 @@ class ActivityServiceTest {
 
 		// when
 
-		when(activityDao.getAllUserActivities(anyString())).thenReturn(list);
 		when(userService.getByName(anyString())).thenReturn(new AppUser());
+		when(activityDao.getAllUserActivities(anyString())).thenReturn(list);
 		List<Activity> list_2 = underTest.getAllActivitiesFromUser("");
 
 		// then

@@ -2,10 +2,13 @@ package checklist.com.server.BestCheckListEver.java.AppUser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import checklist.com.server.BestCheckListEver.models.AppUser;
+
+import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +19,8 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
 import checklist.com.server.BestCheckListEver.services.*;
 import checklist.com.server.BestCheckListEver.daos.UserDaoImpl;
+import checklist.com.server.BestCheckListEver.exceptions.UserNotFoundException;
+
 import static org.mockito.Mockito.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -48,14 +53,9 @@ class UserServiceTest {
 
 	@Test
 	void canGetUsersByIdThrowsException() {
-		// given
-		// when
-		when(userDao.getById(1)).thenReturn(null);
-		AppUser user_2 = underTest.getById(1);
-
-		// then
-		assertFalse(user_2 != null);
-		verify(userDao, times(1)).getById(anyInt());
+		UserNotFoundException thrown = assertThrows(UserNotFoundException.class, () -> underTest.getById(-1),
+				"Expected .getById(-1) to throw UserNotFoundException, but it didn't.");
+		assertTrue(thrown.getMessage().contains("User could not be found"));
 	}
 
 	@Test
@@ -115,6 +115,7 @@ class UserServiceTest {
 
 		// when
 		when(userDao.update(any(AppUser.class))).thenReturn(user_1);
+		when(userDao.getById(anyInt())).thenReturn(new AppUser());
 		AppUser user_2 = underTest.update(0, "b", "c");
 
 		// then
