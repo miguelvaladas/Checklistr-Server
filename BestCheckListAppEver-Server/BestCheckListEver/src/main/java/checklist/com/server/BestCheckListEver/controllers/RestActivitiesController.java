@@ -17,6 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import checklist.com.server.BestCheckListEver.exceptions.ActivityNotFoundException;
+import checklist.com.server.BestCheckListEver.exceptions.UserNotFoundException;
 import checklist.com.server.BestCheckListEver.models.*;
 import checklist.com.server.BestCheckListEver.services.*;
 
@@ -36,8 +38,14 @@ public class RestActivitiesController {
 
 	@RequestMapping(method = RequestMethod.GET, path = "/activities/username={username}")
 	public ResponseEntity<List<Activity>> getActivitiesFromUser(@PathVariable String username) {
-		List<Activity> list = activityService.getAllActivitiesFromUser(username);
-		return new ResponseEntity<>(list, HttpStatus.OK);
+		try {
+			List<Activity> list = activityService.getAllActivitiesFromUser(username);
+			return new ResponseEntity<>(list, HttpStatus.OK);
+
+		} catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@Transactional
@@ -54,21 +62,33 @@ public class RestActivitiesController {
 	@RequestMapping(method = RequestMethod.PUT, path = "/activities")
 	public ResponseEntity<Activity> updateActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, ?> map = objectMapper.readValue(request, HashMap.class);
-		Activity activity = activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"),
-				(String) map.get("status"));
-		return new ResponseEntity<>(activity, HttpStatus.OK);
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			HashMap<String, ?> map = objectMapper.readValue(request, HashMap.class);
+			Activity activity = activityService.updateActivity((Integer) map.get("id"), (String) map.get("description"),
+					(String) map.get("status"));
+			return new ResponseEntity<>(activity, HttpStatus.OK);
+
+		} catch (ActivityNotFoundException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.DELETE, path = "/activities")
 	public ResponseEntity<Activity> deleteActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, Integer> map = objectMapper.readValue(request, HashMap.class);
-		Activity activity = activityService.remove(map.get("id"));
-		return new ResponseEntity<>(activity, HttpStatus.OK);
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			HashMap<String, Integer> map = objectMapper.readValue(request, HashMap.class);
+			Activity activity = activityService.remove(map.get("id"));
+			return new ResponseEntity<>(activity, HttpStatus.OK);
+
+		} catch (ActivityNotFoundException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@Autowired

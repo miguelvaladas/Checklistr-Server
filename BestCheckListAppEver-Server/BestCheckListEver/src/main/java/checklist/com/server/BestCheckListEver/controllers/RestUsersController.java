@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import checklist.com.server.BestCheckListEver.exceptions.*;
 import checklist.com.server.BestCheckListEver.security.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -55,21 +56,33 @@ public class RestUsersController {
 	@RequestMapping(method = RequestMethod.DELETE, path = "/users")
 	public ResponseEntity<AppUser> deleteUser(@RequestBody String response)
 			throws JsonProcessingException, JsonMappingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		Map<String, Integer> map = objectMapper.readValue(response, Map.class);
-		AppUser user = userService.remove(map.get("id"));
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			Map<String, Integer> map = objectMapper.readValue(response, Map.class);
+			AppUser user = userService.remove(map.get("id"));
+			return new ResponseEntity<>(user, HttpStatus.OK);
+
+		} catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/users")
 	public ResponseEntity<AppUser> updateUser(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {
-		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
-		AppUser user = userService.update((Integer) map.get("id"), (String) map.get("username"),
-				(String) map.get("password"));
-		return new ResponseEntity<>(user, HttpStatus.OK);
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			HashMap<String, ?> map = objectMapper.readValue(response, HashMap.class);
+			AppUser user = userService.update((Integer) map.get("id"), (String) map.get("username"),
+					(String) map.get("password"));
+			return new ResponseEntity<>(user, HttpStatus.OK);
+
+		} catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.GET, path = "/refresh/token")
