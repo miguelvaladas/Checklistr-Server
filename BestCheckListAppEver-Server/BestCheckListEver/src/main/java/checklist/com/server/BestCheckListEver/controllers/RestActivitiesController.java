@@ -48,7 +48,6 @@ public class RestActivitiesController {
 		}
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.POST, path = "/activities")
 	public ResponseEntity<Activity> addActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
@@ -58,7 +57,6 @@ public class RestActivitiesController {
 		return new ResponseEntity<>(activity, HttpStatus.OK);
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/activities")
 	public ResponseEntity<Activity> updateActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {
@@ -75,7 +73,6 @@ public class RestActivitiesController {
 		}
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.DELETE, path = "/activities")
 	public ResponseEntity<Activity> deleteActivity(@RequestBody String request)
 			throws JsonMappingException, JsonProcessingException {

@@ -41,7 +41,6 @@ public class RestUsersController {
 		return ResponseEntity.ok().body(list);
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.POST, path = "/users")
 	public ResponseEntity<AppUser> addUser(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {
@@ -52,7 +51,6 @@ public class RestUsersController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.DELETE, path = "/users")
 	public ResponseEntity<AppUser> deleteUser(@RequestBody String response)
 			throws JsonProcessingException, JsonMappingException {
@@ -68,7 +66,6 @@ public class RestUsersController {
 		}
 	}
 
-	@Transactional
 	@RequestMapping(method = RequestMethod.PUT, path = "/users")
 	public ResponseEntity<AppUser> updateUser(@RequestBody String response)
 			throws JsonMappingException, JsonProcessingException {

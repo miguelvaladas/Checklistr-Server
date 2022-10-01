@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
+
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import checklist.com.server.BestCheckListEver.daos.*;
 import checklist.com.server.BestCheckListEver.exceptions.*;
@@ -51,6 +53,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userDao.getAll();
 	}
 
+	@Transactional
 	public AppUser update(Integer userId, String name, String pw) {
 		if (userDao.getById(userId) == null) {
 			throw new UserNotFoundException("User does not exist in our database.");
@@ -62,6 +65,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userDao.update(user);
 	}
 
+	@Transactional
 	public AppUser add(String name, String pw) {
 		AppUser user = new AppUser();
 		user.setName(name);
@@ -71,6 +75,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		return userDao.save(user);
 	}
 
+	@Transactional
 	public AppUser remove(Integer userId) {
 		AppUser user = userDao.getById(userId);
 		if (user == null) {

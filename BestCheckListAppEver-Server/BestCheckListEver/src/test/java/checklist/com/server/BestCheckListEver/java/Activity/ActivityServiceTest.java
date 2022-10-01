@@ -49,4 +49,17 @@ class ActivityServiceTest {
 		verify(activityDao, times(1)).getAllUserActivities(anyString());
 	}
 
+	@Test
+	void canGetActivitiesById() {
+		// given
+		Activity activity_1 = new Activity();
+
+		// when
+		when(activityDao.getById(anyInt())).thenReturn(activity_1);
+		Activity activity_2 = underTest.getById(1);
+
+		// then
+		assertEquals(activity_1, activity_2);
+		verify(activityDao, times(1)).getById(anyInt());
+	}
 }

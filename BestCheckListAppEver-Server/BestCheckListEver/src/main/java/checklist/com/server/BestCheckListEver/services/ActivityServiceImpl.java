@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import checklist.com.server.BestCheckListEver.daos.*;
 import checklist.com.server.BestCheckListEver.models.Activity;
 import checklist.com.server.BestCheckListEver.exceptions.*;
+import javax.transaction.Transactional;
 
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -23,7 +24,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 	public Activity getById(Integer id) {
 		Activity activity = activityDao.getById(id);
-		if(activity == null){
+		if (activity == null) {
 			throw new ActivityNotFoundException("Activity could not be found in database through the provided id.");
 		}
 		return activity;
@@ -33,9 +34,10 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.getAll();
 	}
 
+	@Transactional
 	public Activity updateActivity(Integer activityId, String description, String status) {
 		Activity activity = activityDao.getById(activityId);
-		if(activity == null){
+		if (activity == null) {
 			throw new ActivityNotFoundException("Activity could not be found in database.");
 		}
 		activity.setDescription(description);
@@ -55,6 +57,7 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.update(activity);
 	}
 
+	@Transactional
 	public Activity addActivity(String username, String description) {
 		AppUser user = userService.getByName(username);
 		Activity activity = new Activity();
@@ -63,9 +66,10 @@ public class ActivityServiceImpl implements ActivityService {
 		return activityDao.save(activity);
 	}
 
+	@Transactional
 	public Activity remove(Integer activityId) {
 		Activity activity = activityDao.getById(activityId);
-		if(activity == null){
+		if (activity == null) {
 			throw new ActivityNotFoundException("Activity could not be found in database.");
 		}
 		return activityDao.delete(activity);
